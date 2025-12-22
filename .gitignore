@@ -1,7 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-/node_modules
+# ===== Frontend (Next.js) =====
+# Dependencies
+node_modules/
+apps/web/node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -10,32 +12,76 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
-# next.js
-/.next/
+# Next.js
+apps/web/.next/
+apps/web/out/
 /out/
+/.next/
 
-# production
+# Production builds
 /build
+apps/web/build/
 
-# misc
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+apps/web/next-env.d.ts
+
+# Testing
+/coverage
+apps/web/coverage/
+
+# ===== Backend (Flask/Python) =====
+# Python
+apps/api/__pycache__/
+apps/api/**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+apps/api/venv/
+apps/api/env/
+apps/api/ENV/
+apps/api/.venv/
+
+# Flask
+apps/api/instance/
+apps/api/.webassets-cache
+
+# Python distributions
+apps/api/*.egg-info/
+apps/api/dist/
+apps/api/build/
+
+# ===== Environment Variables =====
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+apps/web/.env*
+apps/api/.env*
+!apps/web/.env.example
+!apps/api/.env.example
+
+# ===== IDE & Editors =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
-*.pem
 
-# debug
+# ===== Logs =====
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
+# ===== Misc =====
+*.pem
 .vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+.turbo
