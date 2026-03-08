@@ -93,15 +93,15 @@ export function StockChart({ defaultSymbol = 'SPY' }: StockChartProps) {
       </CardHeader>
       <CardContent>
         {loading ? (
-          <div className="flex items-center justify-center h-[400px]">
+          <div className="flex items-center justify-center h-400px">
             <p className="text-muted-foreground">Loading chart data...</p>
           </div>
         ) : error ? (
-          <div className="flex items-center justify-center h-[400px]">
+          <div className="flex items-center justify-center h-400px">
             <p className="text-red-500">{error}</p>
           </div>
         ) : data.length === 0 ? (
-          <div className="flex items-center justify-center h-[400px]">
+          <div className="flex items-center justify-center h-400px">
             <p className="text-muted-foreground">No data available</p>
           </div>
         ) : (
