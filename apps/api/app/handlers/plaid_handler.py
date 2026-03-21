@@ -22,20 +22,6 @@ def create_link_token(user_id='user-sandbox'):
             products=[Products('auth'), Products('transactions')],
             country_codes=PLAID_COUNTRY_CODES,
             language='en'
-<<<<<<< HEAD
-            # redirect_uri is optional and only needed if configured in Plaid Dashboard
-        )
-        
-        response = plaid_client.link_token_create(request_data)
-        # Convert response object to dictionary
-        response_dict = response.to_dict()
-        return {
-            'link_token': response_dict['link_token'],
-            'expiration': response_dict['expiration']
-        }
-    except Exception as e:
-        print(f"Error creating link token: {e}")  # Add logging
-=======
         )
         
         response = plaid_client.link_token_create(request_data)
@@ -67,7 +53,6 @@ def create_sandbox_public_token(user_id='user-sandbox'):
         }
     except Exception as e:
         print(f"Error creating sandbox public token: {str(e)}")
->>>>>>> d7305e017f0ad2e514f2aafb1b318cad26f10c4b
         return {'error': str(e)}, 500
 
 
