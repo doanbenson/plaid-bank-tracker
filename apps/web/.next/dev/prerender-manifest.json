@@ -4,20 +4,8 @@
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-<<<<<<< HEAD
-    "previewModeId": "2cfe08e3593ef78151c3b02b9ffbd9f1",
-    "previewModeSigningKey": "6eae055c58a8e50d42b0fb5b43f9ad16bc1163cebb460b8ee64f4bbdedf5963e",
-    "previewModeEncryptionKey": "9f8c7ad9b632ec3e7367c3885be666342b24b813dba13a7802d8fc4432cea64d"
-=======
-<<<<<<< HEAD
-    "previewModeId": "65be5bfd8a3839d370829ce4ad0feca7",
-    "previewModeSigningKey": "f43fadeb6e7ad8290c55b0f8915cb602a7cb9bb50397b610ed26a3202102a096",
-    "previewModeEncryptionKey": "3caa3601600cfee5e35f4661c82cc141f65de0e4f9d49722da82667071491909"
-=======
-    "previewModeId": "f4e6e1bbfe507433fb1620eb97779dee",
-    "previewModeSigningKey": "0e1f9b80dd3b9cbb32fac136495a93a50f4a4f2b88689a4eda8d1b6437a9d553",
-    "previewModeEncryptionKey": "4050ef2105098eeef48725ab5852f0ad8cd6e570178e8cd0ad9dfb5827640a94"
->>>>>>> d7305e017f0ad2e514f2aafb1b318cad26f10c4b
->>>>>>> a6c5ef96ab69176dd6caceddc54d95528b73b199
+    "previewModeId": "2a796c83b9237c1c0a958875a212113d",
+    "previewModeSigningKey": "d7d6f5ddb995fb0aa0fd62c3cb42e74191083676b98bc1693cdea110e19171e8",
+    "previewModeEncryptionKey": "1104845477b395d6284b9fd09bbe5762a06e39e2401d2f2efaf43a766d65fd97"
   }
 }

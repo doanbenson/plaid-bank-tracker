@@ -15,10 +15,10 @@ class RiskAgent(BaseAgent):
         4. Daily loss limit (drawdown halt)
     """
 
-    def __init__(self):
+    def __init__(self, portfolio=None, market=None):
         super().__init__("risk")
-        self.portfolio = PortfolioService()
-        self.market = MarketDataService()
+        self.portfolio = portfolio or PortfolioService()
+        self.market = market or MarketDataService()
 
     async def process(self, context: dict) -> dict:
         """Filter and size incoming signals.
@@ -109,7 +109,11 @@ class RiskAgent(BaseAgent):
 
         # Calculate position size
         max_position_value = equity * config.MAX_POSITION_PCT
-        quote = self.market.get_quote(sig.symbol)
+        # Use portfolio.get_quote if available (simulated), else market service
+        if hasattr(self.portfolio, 'get_quote'):
+            quote = self.portfolio.get_quote(sig.symbol)
+        else:
+            quote = self.market.get_quote(sig.symbol)
         if not quote or quote["mid"] <= 0:
             return RiskAssessment(
                 signal=sig,

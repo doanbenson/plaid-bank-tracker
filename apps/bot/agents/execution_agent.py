@@ -6,9 +6,9 @@ from services.portfolio import PortfolioService
 class ExecutionAgent(BaseAgent):
     """Places orders on Alpaca for risk-approved signals."""
 
-    def __init__(self):
+    def __init__(self, portfolio=None):
         super().__init__("execution")
-        self.portfolio = PortfolioService()
+        self.portfolio = portfolio or PortfolioService()
 
     async def process(self, context: dict) -> dict:
         """Execute approved assessments.
