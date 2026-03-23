@@ -85,7 +85,6 @@ def exchange_public_token(public_token, user_id='user-sandbox'):
         balance_response = plaid_client.accounts_balance_get(balance_request)
         
         # Store accounts
-
         for account in balance_response.accounts:
             account_id = account.account_id
             accounts_store[account_id] = {
@@ -147,7 +146,6 @@ def sync_transactions(access_token, item_id):
                 }
                 added.append(transactions_store[transaction_id])
             
-
             has_more = response.has_more
             cursor = response.next_cursor
         

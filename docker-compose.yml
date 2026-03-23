@@ -27,5 +27,27 @@ services:
     depends_on:
       - mongo
 
+  # bot:
+  #   build:
+  #     context: ./apps/bot
+  #     dockerfile: Dockerfile
+  #   container_name: plaid-bot
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8080:8080"
+  #   env_file:
+  #     - ./apps/api/.env
+  #   environment:
+  #     BOT_WATCHLIST: "AAPL,MSFT,GOOGL,AMZN,TSLA"
+  #     BOT_INTERVAL_MINUTES: "5"
+  #     BOT_MAX_POSITION_PCT: "0.05"
+  #     BOT_DAILY_LOSS_LIMIT: "0.02"
+  #     COPILOT_MODEL: "gpt-4o"
+  #   volumes:
+  #     - bot_checkpoints:/app/training/checkpoints
+  #   depends_on:
+  #     - mongo
+
 volumes:
   mongo_data:
+  # bot_checkpoints:
