@@ -1,5 +1,6 @@
 from models.base_model import BaseStrategyModel
-from models.lstm_forecaster import LSTMForecaster
+from models.temporal_fusion_transformer import TemporalFusionTransformer
+from models.factory import build_model
 from models.signal import (
     TradeSignal,
     RiskAssessment,

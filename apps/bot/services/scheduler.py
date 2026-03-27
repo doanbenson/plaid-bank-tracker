@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
-from agents.orchestrator import Orchestrator
+from agents.orchestrator_langgraph import Orchestrator
 import config
 
 logger = logging.getLogger("bot.scheduler")

@@ -86,3 +86,9 @@ yarn-error.log*
 *.pem
 .vercel
 .turbo
+
+# ===== bot ======
+__pycache__/
+*.pyc
+.env
+training/checkpoints/*.pt

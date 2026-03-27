@@ -1,4 +1,4 @@
-"""Data loading and preprocessing for training the LSTM forecaster.
+"""Data loading and preprocessing for training the TFT forecaster.
 
 Fetches OHLCV from Alpaca, computes features, and creates sliding-window
 (X, y) tensors suitable for supervised training.
@@ -8,7 +8,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-from services.market_data import MarketDataService, compute_features
+from services.market_data import MarketDataService
 import config
 
 
@@ -21,10 +21,9 @@ class StockDataset(Dataset):
         2 = price went up by > 0.5%
     """
 
-    THRESHOLD = 0.005  # 0.5%
-
-    def __init__(self, features: np.ndarray, closes: np.ndarray, seq_len: int):
+    def __init__(self, features: np.ndarray, closes: np.ndarray, seq_len: int, threshold: float = 0.005):
         self.seq_len = seq_len
+        self.threshold = threshold
         self.features = features
         self.labels = self._make_labels(closes)
 
@@ -36,8 +35,8 @@ class StockDataset(Dataset):
         """Convert close prices into directional labels (0/1/2)."""
         pct = np.diff(closes) / closes[:-1]
         labels = np.ones(len(pct), dtype=np.int64)  # default = hold (1)
-        labels[pct < -self.THRESHOLD] = 0  # down
-        labels[pct > self.THRESHOLD] = 2   # up
+        labels[pct < -self.threshold] = 0  # down
+        labels[pct > self.threshold] = 2   # up
         return labels
 
     def __len__(self) -> int:
@@ -53,6 +52,7 @@ def load_dataset(
     symbols: list[str] | None = None,
     days: int = 365,
     seq_len: int | None = None,
+    label_threshold: float | None = None,
 ) -> StockDataset:
     """Build a combined dataset across multiple symbols."""
     symbols = symbols or config.WATCHLIST
@@ -87,4 +87,9 @@ def load_dataset(
     features = np.concatenate(all_features, axis=0)
     closes = np.concatenate(all_closes, axis=0)
 
-    return StockDataset(features, closes, seq_len)
+    return StockDataset(
+        features,
+        closes,
+        seq_len,
+        threshold=label_threshold if label_threshold is not None else config.TRAIN_LABEL_THRESHOLD,
+    )

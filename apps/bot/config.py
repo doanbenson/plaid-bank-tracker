@@ -23,10 +23,17 @@ MODEL_CHECKPOINT_DIR = os.getenv("BOT_CHECKPOINT_DIR", "training/checkpoints")
 MODEL_LOOKBACK_DAYS = int(os.getenv("BOT_LOOKBACK_DAYS", "60"))
 MODEL_SEQUENCE_LENGTH = int(os.getenv("BOT_SEQUENCE_LENGTH", "30"))
 MODEL_FEATURE_COUNT = int(os.getenv("BOT_FEATURE_COUNT", "10"))
+MODEL_ARCH = os.getenv("BOT_MODEL_ARCH", "tft").lower()
 
-# --- Copilot SDK ---
-COPILOT_MODEL = os.getenv("COPILOT_MODEL", "gpt-4o")
-COPILOT_LOG_LEVEL = os.getenv("COPILOT_LOG_LEVEL", "warning")
+# TFT defaults
+TFT_HIDDEN_SIZE = int(os.getenv("BOT_TFT_HIDDEN_SIZE", "128"))
+TFT_NUM_HEADS = int(os.getenv("BOT_TFT_NUM_HEADS", "4"))
+TFT_NUM_LAYERS = int(os.getenv("BOT_TFT_NUM_LAYERS", "2"))
+TFT_DROPOUT = float(os.getenv("BOT_TFT_DROPOUT", "0.2"))
+
+# Training defaults
+TRAIN_LABEL_THRESHOLD = float(os.getenv("BOT_LABEL_THRESHOLD", "0.005"))
+OPTUNA_STORAGE = os.getenv("BOT_OPTUNA_STORAGE", "sqlite:///training/optuna_study.db")
 
 # --- Health Server ---
 HEALTH_PORT = int(os.getenv("BOT_HEALTH_PORT", "8080"))

@@ -23,9 +23,9 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import config
-from models.lstm_forecaster import LSTMForecaster
+from models.factory import build_model
 from models.signal import TradeSignal, SignalDirection
-from services.market_data import MarketDataService, compute_features
+from services.market_data import MarketDataService
 from services.simulated_portfolio import SimulatedPortfolio
 from agents.risk_agent import RiskAgent
 from agents.execution_agent import ExecutionAgent
@@ -106,6 +106,7 @@ async def run_backtest(
     starting_cash: float = 100_000.0,
     slippage_pct: float = 0.0005,
     train_split: float = 0.7,
+    model_arch: str = "tft",
 ) -> dict:
     symbols = symbols or config.WATCHLIST
     seq_len = config.MODEL_SEQUENCE_LENGTH
@@ -153,9 +154,11 @@ async def run_backtest(
     )
 
     # Load model
-    model = LSTMForecaster(num_features=config.MODEL_FEATURE_COUNT)
+    model = build_model(model_arch, num_features=config.MODEL_FEATURE_COUNT)
     ckpt_dir = Path(config.MODEL_CHECKPOINT_DIR)
-    ckpts = sorted(ckpt_dir.glob("*.pt")) if ckpt_dir.exists() else []
+    ckpts = sorted(ckpt_dir.glob(f"{model_arch}_*.pt")) if ckpt_dir.exists() else []
+    if not ckpts and ckpt_dir.exists():
+        ckpts = sorted(ckpt_dir.glob("*.pt"))
     if ckpts:
         model.load_checkpoint(ckpts[-1])
         logger.info("Loaded checkpoint: %s", ckpts[-1])
@@ -219,7 +222,7 @@ async def run_backtest(
                 direction=direction,
                 confidence=prediction["confidence"],
                 predicted_move=prediction["predicted_move"],
-                model_name="lstm_forecaster",
+                model_name=model_arch,
                 features_used=avail_cols,
                 timestamp=current_date if isinstance(current_date, datetime) else datetime.utcnow(),
             ))
@@ -306,4 +309,5 @@ if __name__ == "__main__":
         starting_cash=args.cash,
         slippage_pct=args.slippage,
         train_split=args.train_split,
+        model_arch="tft",
     ))

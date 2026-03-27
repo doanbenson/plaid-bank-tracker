@@ -10,10 +10,10 @@ alpaca-py>=0.8
 pandas>=2.0
 numpy>=1.24
 torch>=2.2
-pydantic>=2.0
+optuna>=3.6
+
+# Orchestration
+langgraph>=0.2
 
 # Scheduling
 APScheduler>=3.10
-
-# GitHub Copilot SDK
-github-copilot-sdk>=0.1

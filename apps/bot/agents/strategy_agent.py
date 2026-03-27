@@ -1,10 +1,9 @@
 import torch
-import numpy as np
 from pathlib import Path
 
 from agents.base_agent import BaseAgent
 from models.signal import TradeSignal, SignalDirection
-from models.lstm_forecaster import LSTMForecaster
+from models.factory import build_model
 from services.market_data import MarketDataService
 import config
 
@@ -15,15 +14,16 @@ class StrategyAgent(BaseAgent):
     def __init__(self):
         super().__init__("strategy")
         self.market = MarketDataService()
-        self.model = LSTMForecaster(
-            num_features=config.MODEL_FEATURE_COUNT,
-        )
+        self.model_arch = config.MODEL_ARCH
+        self.model = build_model(self.model_arch, num_features=config.MODEL_FEATURE_COUNT)
         self._load_model()
 
     def _load_model(self) -> None:
         """Try to load the latest checkpoint. If none exists, model stays random (paper-safe)."""
         ckpt_dir = Path(config.MODEL_CHECKPOINT_DIR)
-        ckpts = sorted(ckpt_dir.glob("*.pt")) if ckpt_dir.exists() else []
+        ckpts = sorted(ckpt_dir.glob(f"{self.model_arch}_*.pt")) if ckpt_dir.exists() else []
+        if not ckpts and ckpt_dir.exists():
+            ckpts = sorted(ckpt_dir.glob("*.pt"))
         if ckpts:
             latest = ckpts[-1]
             self.logger.info("Loading checkpoint %s", latest)
@@ -79,7 +79,7 @@ class StrategyAgent(BaseAgent):
                 direction=direction,
                 confidence=prediction["confidence"],
                 predicted_move=prediction["predicted_move"],
-                model_name="lstm_forecaster",
+                model_name=self.model_arch,
                 features_used=available,
             )
 

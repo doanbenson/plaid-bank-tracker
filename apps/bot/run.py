@@ -2,12 +2,11 @@
 
 Starts:
     1. A lightweight health-check HTTP server (for Docker/web app polling)
-    2. The Copilot SDK orchestrator
+    2. The LangGraph orchestrator
     3. The APScheduler loop that triggers the pipeline on interval
 """
 
 import asyncio
-import json
 import logging
 import sys
 from pathlib import Path
@@ -17,7 +16,7 @@ from aiohttp import web
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import config
-from agents.orchestrator import Orchestrator
+from agents.orchestrator_langgraph import Orchestrator
 from services.scheduler import BotScheduler
 
 logging.basicConfig(
@@ -89,7 +88,7 @@ async def main() -> None:
     logger.info("Initializing AI Trading Bot...")
     logger.info("Watchlist: %s", config.WATCHLIST)
     logger.info("Interval: %d minutes", config.STRATEGY_INTERVAL_MINUTES)
-    logger.info("Model: %s", config.COPILOT_MODEL)
+    logger.info("Model architecture: %s", config.MODEL_ARCH)
 
     orchestrator = Orchestrator()
     await orchestrator.start()
