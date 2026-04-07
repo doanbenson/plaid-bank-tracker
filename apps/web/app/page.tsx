@@ -7,14 +7,12 @@ import TransactionList from '@/components/bank/TransactionList';
 import PlaidLinkButton from '@/components/bank/PlaidLinkButton';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [accounts, setAccounts] = useState<any[]>([]);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
-  const router = useRouter();
 
   const fetchData = async () => {
     setLoading(true);
@@ -73,7 +71,6 @@ export default function Home() {
             Manage your accounts and transactions
           </p>
         </div>
-        <Button className="text-left" onClick={() => router.push('/trading')}>Trading Page</Button>
         <PlaidLinkButton
           onSuccess={handleLinkSuccess}
           onError={(error) => console.error('Link error:', error)}
