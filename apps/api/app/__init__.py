@@ -16,11 +16,10 @@ def create_app():
          supports_credentials=False)
     
     # Register blueprints
-    from app.routes import plaid, accounts, transactions, trading
+    from app.routes import plaid, accounts, transactions
     app.register_blueprint(plaid.bp)
     app.register_blueprint(accounts.bp)
     app.register_blueprint(transactions.bp)
-    app.register_blueprint(trading.bp)
     
     @app.route('/health')
     def health():

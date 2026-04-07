@@ -38,8 +38,3 @@ plaid_client = plaid_api.PlaidApi(api_client)
 # Plaid Products - auth includes balance, transactions syncs transactions
 PLAID_PRODUCTS = [Products('auth'), Products('transactions')]
 PLAID_COUNTRY_CODES = [CountryCode('US')]
-
-# Alpaca Configuration
-ALPACA_API_KEY = os.getenv('ALPACA_API_KEY')
-ALPACA_SECRET_KEY = os.getenv('ALPACA_SECRET_KEY')
-ALPACA_PAPER = os.getenv('ALPACA_PAPER', 'true').lower() == 'true'
