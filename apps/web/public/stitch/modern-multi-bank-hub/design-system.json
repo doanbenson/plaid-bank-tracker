@@ -1,0 +1,35 @@
+{
+  "name": "assets/16fdfe33a6cf4f9dac0fe9eabb793b52",
+  "displayName": "Ethereal Ledger",
+  "version": "2",
+  "theme": {
+    "bodyFont": "MANROPE",
+    "headlineFont": "MANROPE",
+    "labelFont": "MANROPE",
+    "colorMode": "LIGHT",
+    "colorVariant": "TONAL_SPOT",
+    "customColor": "#9c6689",
+    "roundness": "ROUND_EIGHT",
+    "overrideNeutralColor": "#7e7578",
+    "overridePrimaryColor": "#9c6689",
+    "overrideSecondaryColor": "#8a707f",
+    "overrideTertiaryColor": "#856e98"
+  },
+  "namedColors": {
+    "background": "#fff8f8",
+    "on_background": "#3a2f34",
+    "primary": "#814f70",
+    "on_primary": "#fff7f8",
+    "primary_container": "#fcbce3",
+    "secondary": "#705866",
+    "secondary_container": "#fadaeb",
+    "tertiary": "#6c567f",
+    "tertiary_container": "#e8cdfd",
+    "surface": "#fff8f8",
+    "surface_container": "#faeaef",
+    "surface_container_low": "#fff0f4",
+    "surface_container_lowest": "#ffffff",
+    "outline": "#85777d",
+    "outline_variant": "#beaeb4"
+  }
+}

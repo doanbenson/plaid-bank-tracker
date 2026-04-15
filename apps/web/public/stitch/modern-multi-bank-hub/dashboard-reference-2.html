@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ethereal Ledger | Intelligence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-error": "#fff7f7",
+                        "surface-container-low": "#fff0f4",
+                        "tertiary-dim": "#604a72",
+                        "secondary-fixed": "#fadaeb",
+                        error: "#a8364b",
+                        "error-dim": "#6b0221",
+                        "inverse-primary": "#fcbce3",
+                        "surface-dim": "#e7d5dc",
+                        tertiary: "#6c567f",
+                        "on-tertiary-fixed-variant": "#614c73",
+                        "surface-container-high": "#f5e4ea",
+                        "tertiary-fixed": "#e8cdfd",
+                        "surface-bright": "#fff8f8",
+                        background: "#fff8f8",
+                        "tertiary-container": "#e8cdfd",
+                        "on-surface-variant": "#695b61",
+                        "outline-variant": "#beaeb4",
+                        "surface-variant": "#f0dee4",
+                        "on-tertiary-container": "#574269",
+                        "surface-container-highest": "#f0dee4",
+                        "inverse-surface": "#120d0f",
+                        "primary-container": "#fcbce3",
+                        "primary-fixed": "#fcbce3",
+                        secondary: "#705866",
+                        "on-primary-container": "#653656",
+                        "on-secondary-fixed-variant": "#6d5563",
+                        "primary-dim": "#744364",
+                        "secondary-dim": "#644c5a",
+                        surface: "#fff8f8",
+                        "surface-tint": "#814f70",
+                        "on-secondary-container": "#624b59",
+                        "on-tertiary": "#fff6ff",
+                        outline: "#85777d",
+                        "on-secondary-fixed": "#4f3946",
+                        "on-surface": "#3a2f34",
+                        "on-error-container": "#6e0523",
+                        "secondary-container": "#fadaeb",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#f97386",
+                        "inverse-on-surface": "#a49a9d",
+                        "primary-fixed-dim": "#edaed5",
+                        "on-primary-fixed-variant": "#6f3f5f",
+                        "on-primary": "#fff7f8",
+                        "secondary-fixed-dim": "#ebccdd",
+                        "on-primary-fixed": "#4f2342",
+                        "on-secondary": "#fff7f8",
+                        primary: "#814f70",
+                        "on-tertiary-fixed": "#433055",
+                        "tertiary-fixed-dim": "#dabfee",
+                        "surface-container": "#faeaef",
+                        "on-background": "#3a2f34"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    fontFamily: {
+                        headline: ["Manrope"],
+                        body: ["Manrope"],
+                        label: ["Manrope"],
+                        display: "Manrope"
+                    }
+                }
+            }
+        };
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-header {
+            backdrop-filter: blur(20px);
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        details[open] .toggle-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- SideNavBar Integration -->
+<aside class="fixed left-0 top-0 h-full flex flex-col py-8 px-4 border-r border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 h-screen w-64 z-50">
+<div class="flex items-center gap-3 px-2 mb-10">
+<div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+</div>
+<div>
+<h1 class="text-lg font-extrabold text-slate-900 dark:text-white leading-none">Intelligence</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mt-1">Premium Tier</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 ease-in-out text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-900" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-manrope text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 ease-in-out text-blue-600 dark:text-blue-400 border-r-2 border-blue-400 bg-blue-50/30 dark:bg-blue-900/10" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-manrope text-sm font-medium">Accounts</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 ease-in-out text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-900" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-manrope text-sm font-medium">Transactions</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 ease-in-out text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-900" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-manrope text-sm font-medium">Wealth</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 ease-in-out text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-900" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-manrope text-sm font-medium">Support</span>
+</a>
+</nav>
+<div class="mt-auto px-2">
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm">add</span>
+<span class="text-xs uppercase tracking-wider">Link New Bank</span>
+</button>
+</div>
+</aside>
+<!-- TopAppBar Integration -->
+<header class="fixed top-0 w-full z-40 flex justify-between items-center px-8 h-16 ml-64 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl right-0 w-[calc(100%-16rem)]">
+<div class="flex items-center">
+<h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 font-manrope tracking-tight">Ethereal Ledger</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative flex items-center bg-surface-container-low px-4 py-2 rounded-full w-64 group focus-within:bg-surface-container-lowest transition-colors">
+<span class="material-symbols-outlined text-outline text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-outline-variant" placeholder="Search wealth..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-blue-50/50 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-blue-50/50 rounded-full transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-primary-container">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="Professional headshot of a person with a friendly expression, soft studio lighting, clean minimalist background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJcd4ASx3_gBl_LomCZBsGIybqLU63OYtqe2xOl2OJAby_u9yXLNNVmThWUIlqYftYKYUc_xLfPKUFeAQWtVN8fqMU6cWRbwF2n4CWAh-XuXOs8dksZede85PGkFI26Ahjaf5UPlVZqb_sqyRf8jQxdlske-TzQng_uTN7_kBQc6sBoyOMXCfZetyj1sNNd7kg3sc3ZJNBy7GtDUzKCUbJeGsDVnCclqSOmHskqX_GvfC1uu9XwKN76SPHjp3eGL42syrUu7Q7aA"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 pt-24 pb-12 px-12">
+<div class="max-w-6xl mx-auto">
+<!-- Hero Summary Section -->
+<section class="mb-12">
+<div class="flex flex-col md:flex-row justify-between items-end gap-6">
+<div>
+<p class="text-on-surface-variant font-medium mb-1 flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-secondary rounded-full"></span>
+                            Total Net Liquidity
+                        </p>
+<h1 class="text-6xl font-extrabold text-on-background tracking-tighter">
+                            $1,248,390<span class="text-primary-container">.42</span>
+</h1>
+</div>
+<div class="flex gap-4">
+<div class="bg-secondary-container px-6 py-4 rounded-xl flex items-center gap-4">
+<div class="w-10 h-10 bg-white/40 rounded-lg flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<div>
+<p class="text-[10px] uppercase font-bold text-on-secondary-container/60 leading-none mb-1">Monthly Yield</p>
+<p class="text-lg font-bold text-on-secondary-container">+4.2%</p>
+</div>
+</div>
+<div class="bg-primary-container px-6 py-4 rounded-xl flex items-center gap-4">
+<div class="w-10 h-10 bg-white/40 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<div>
+<p class="text-[10px] uppercase font-bold text-on-primary-container/60 leading-none mb-1">Active Banks</p>
+<p class="text-lg font-bold text-on-primary-container">05</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Layout Content -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Categorized Accounts Section -->
+<div class="col-span-12 lg:col-span-8 space-y-4">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-2xl font-bold tracking-tight">Connected Institutions</h3>
+<button class="text-sm font-semibold text-primary hover:underline transition-all">View Analytics</button>
+</div>
+<!-- Savings Section (Collapsible) -->
+<details class="group/category">
+<summary class="flex items-center justify-between cursor-pointer p-2 hover:bg-surface-variant/20 rounded-xl transition-colors list-none">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant/60 text-lg transition-transform duration-300 toggle-icon">expand_more</span>
+<h4 class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant/70">Savings</h4>
+</div>
+<div class="text-right"><div class="flex items-center gap-2 justify-end"><span class="text-[9px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Stable</span><p class="text-xs font-bold text-on-surface-variant">$592,400.12</p></div></div>
+</summary>
+<div class="space-y-3 mt-4 px-1">
+<!-- Bank Entry 2 -->
+<div class="group bg-surface-container-lowest p-4 rounded-2xl flex items-center justify-between transition-all hover:scale-[1.01] hover:bg-white border border-transparent hover:border-secondary-container">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center">
+<img alt="Goldman Sachs" class="w-8 h-8 object-contain" data-alt="Modern corporate logo for a wealth management firm with silver accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5lH0VjUoM105_S1IgFPN8pG73tdMkJPdObmLu_BRKrty2pdLtdIev4WllJ8rb-U2ZJ_dJKX0sMaD7EfiJsWVP5Ajp1nHaHjpVyRS6Vh4oRLd4J3XggFLUn05jzq-sT3hDQzUcZlYrisCVm4LNxN0Qg0aUyb0w7W3pxtZvnrFw8JnVSQOZ-Dzn-Ei6RKnVpgh8rHYbK-VYgna6uElekJ1J2VFUV7REYJmzBuQkc5-gMlEbmTb01Wm84_NH0ZlRxlluyWzqdIMxIw"/>
+</div>
+<div>
+<h4 class="text-base font-bold text-on-surface">Goldman Sachs Marcus</h4>
+<p class="text-xs text-on-surface-variant">High-Yield Savings •••• 1004</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-on-background">$592,400.12</p>
+<span class="text-[9px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold">STABLE</span>
+</div>
+</div>
+</div>
+</details>
+<!-- Checking Section (Collapsible) -->
+<details class="group/category">
+<summary class="flex items-center justify-between cursor-pointer p-2 hover:bg-surface-variant/20 rounded-xl transition-colors list-none">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant/60 text-lg transition-transform duration-300 toggle-icon">expand_more</span>
+<h4 class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant/70">Checking</h4>
+</div>
+<div class="text-right"><div class="flex items-center gap-2 justify-end"><span class="text-[9px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Stable</span><p class="text-xs font-bold text-on-surface-variant">$444,251.00</p></div></div>
+</summary>
+<div class="space-y-3 mt-4 px-1">
+<!-- Bank Entry 1 -->
+<div class="group bg-surface-container-lowest p-4 rounded-2xl flex items-center justify-between transition-all hover:scale-[1.01] hover:bg-white border border-transparent hover:border-secondary-container">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
+<img alt="Chase Bank" class="w-8 h-8 object-contain" data-alt="Abstract blue logo for a premium financial institution on a clean white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyOgek1vWBYfNVi-A3B1HwBpyC7ZF9Ur46eyZ2ctywrNdGyuynpcmhwzBngfv6A0iri_YlVqBvV_Shv3mV_H53I09mGfws89r7SsBtS--MuPsYcvXOe14d-6IX1SpZuaKlCMiUpmrLLq6GCiJq-VfZvvQJ-F6dohue8-B4AhVEwB4wjPQrvfbRHrMVA5o2FylCX8EjPS8FhAvyNyz2Z-umlbWJcvWIf9Cd5mYtfhbpkQy_tznjqYl_9bnFv5a-kfxZmjA60n8BDA"/>
+</div>
+<div>
+<h4 class="text-base font-bold text-on-surface">Chase Sapphire Reserve</h4>
+<p class="text-xs text-on-surface-variant">Checking •••• 8821</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-on-background">$442,109.00</p>
+<span class="text-[9px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold">STABLE</span>
+</div>
+</div>
+<!-- Bank Entry 5 -->
+<div class="group bg-surface-container-lowest p-4 rounded-2xl flex items-center justify-between transition-all hover:scale-[1.01] hover:bg-white border border-transparent hover:border-secondary-container">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center">
+<img alt="Wells Fargo" class="w-8 h-8 object-contain" data-alt="Iconic red and gold stagecoach logo for a global bank" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEa8s9VwJagvImacAvIs3Eb3WS0C_Y8YVjCP2zxuGHuq87LOmSgFRXsu-MMzrVUTEmTVtJfcJVabkctCca5Z6UDNROrLsDSBSAyshgkQo7eN9CvMkdzTQnfMlm56D6O8HyTzJoZfncQ1gaHFCqmC09xtJLE6yVXar3vDWGafGM-9qm43tM7bpcqSySIMql8jeOEn_B5CAPMliw4M6GkWWEpBBC-n3M0dPXM4reETuMcOuL1dNep3uaA0sdzc56A9f0DvSuzTtIXQ"/>
+</div>
+<div>
+<h4 class="text-base font-bold text-on-surface">Wells Fargo Premium</h4>
+<p class="text-xs text-on-surface-variant">Checking •••• 0021</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-on-background">$2,142.00</p>
+<span class="text-[9px] bg-surface-container-highest text-on-surface-variant px-2 py-0.5 rounded-full font-bold">DORMANT</span>
+</div>
+</div>
+</div>
+</details>
+<!-- Investments Section (Collapsible) -->
+<details class="group/category">
+<summary class="flex items-center justify-between cursor-pointer p-2 hover:bg-surface-variant/20 rounded-xl transition-colors list-none">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant/60 text-lg transition-transform duration-300 toggle-icon">expand_more</span>
+<h4 class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant/70">Investments</h4>
+</div>
+<div class="text-right"><div class="flex items-center gap-2 justify-end"><span class="text-[9px] text-primary font-bold uppercase">+1.2%</span><p class="text-xs font-bold text-on-surface-variant">$216,027.10</p></div></div>
+</summary>
+<div class="space-y-3 mt-4 px-1">
+<!-- Bank Entry 4 -->
+<div class="group bg-surface-container-lowest p-4 rounded-2xl flex items-center justify-between transition-all hover:scale-[1.01] hover:bg-white border border-transparent hover:border-secondary-container">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center">
+<img alt="Fidelity" class="w-8 h-8 object-contain" data-alt="Minimalist green pyramid logo icon for an investment management company" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQnEbV69EorcD_4_Du2VnvJDqZE-SA4VoJg3FFF3aA_vaUwz7pLCjJjNAFM5O8KHcIiAcJ99AuH9t2rzhbmI4Kb_pjo6fl5svcMh64X-03u45RDr70u5pnmO6tmwYaWdLvCkcOvUOTxlOcRLHWjE6mkTK_OZKKY0qFy1ioM11XxNI4UIjfusVYbxLg_97gMMEvPKekstEm57wzJYbHu967K6Hzhbd_FOMRu86u6W-Yb5epQBt1HR0PZzNRF_nMXnLT5F0k3iqPrQ"/>
+</div>
+<div>
+<h4 class="text-base font-bold text-on-surface">Fidelity Brokerage</h4>
+<p class="text-xs text-on-surface-variant">Investment •••• 9920</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-on-background">$216,027.10</p>
+<span class="text-[9px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold uppercase">Up +1.2%</span>
+</div>
+</div>
+</div>
+</details>
+<!-- Credit Cards Section (Collapsible) -->
+<details class="group/category">
+<summary class="flex items-center justify-between cursor-pointer p-2 hover:bg-surface-variant/20 rounded-xl transition-colors list-none">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant/60 text-lg transition-transform duration-300 toggle-icon">expand_more</span>
+<h4 class="text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant/70">Credit Cards</h4>
+</div>
+<div class="text-right"><div class="flex items-center gap-2 justify-end"><span class="text-[9px] bg-tertiary-container text-on-tertiary-container px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Due Oct 24</span><p class="text-xs font-bold text-on-surface-variant">-$2,145.80</p></div></div>
+</summary>
+<div class="space-y-3 mt-4 px-1">
+<!-- Bank Entry 3 -->
+<div class="group bg-surface-container-lowest p-4 rounded-2xl flex items-center justify-between transition-all hover:scale-[1.01] hover:bg-white border border-transparent hover:border-secondary-container">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center">
+<img alt="Discover" class="w-8 h-8 object-contain" data-alt="Vibrant orange and black brand logo for a credit services provider" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlbYAPGthAUSqjR8bY2MW6SMOk4l1EOxOyMHoDcQy-EEjxWOkDiD-GH_qthBXCvBx_uCJAfpuPnihZ4Urm6LyU511ncTR26x378wECEdy8IpFOtsaxiybfYNk9jbcD_5iSr3DVzv7gZuDWNaz2hC5MvrEy5mg4_m0MHwc1MHcK5JX5tQwnv-5ZNQLSaJZQGMthVgJd2WDJ_7ZdREcseWGTmXQ9eQV6rUc1EE9bn92OpZNrzISOfsKqbUs77WcDNi_cGfEip01TMA"/>
+</div>
+<div>
+<h4 class="text-base font-bold text-on-surface">Discover Bank</h4>
+<p class="text-xs text-on-surface-variant">Credit Card •••• 4492</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-on-background">-$2,145.80</p>
+<span class="text-[9px] bg-tertiary-container text-on-tertiary-container px-2 py-0.5 rounded-full font-bold">PAYMENT DUE</span>
+</div>
+</div>
+</div>
+</details>
+</div>
+<!-- Secondary Intelligence Column -->
+<div class="col-span-12 lg:col-span-4 space-y-8">
+<!-- Wealth Map Visualization Card -->
+<div class="bg-primary-container/20 rounded-3xl p-8 relative overflow-hidden h-[320px]">
+<div class="relative z-10">
+<p class="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-2">Monthly Cash Flow</p>
+<h3 class="text-2xl font-bold text-on-primary-container leading-tight">Income vs Expense</h3>
+</div>
+<div class="absolute inset-0 z-0">
+<img alt="Asset Allocation Pie Chart" class="w-full h-full object-cover opacity-40" data-alt="Stylized pastel donut chart representing income versus expense ratio, integrated into the card background" data-location="Global" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHmXfU0A40C_iK7Z9Q-6fB6rI4C9P6O-H6_u8_C6Q6V6P6O-H6_u8_C6Q6V6P6O-H6_u8_C6Q6V6P6O-H6_u8_C6Q6V6P6O-H6_u8_C6Q6"/>
+</div>
+<div class="absolute bottom-8 left-8 right-8 z-10 flex flex-wrap gap-2 justify-between">
+<div class="bg-white/80 backdrop-blur px-3 py-2 rounded-xl flex-1 text-center"><p class="text-[8px] text-on-surface-variant font-bold uppercase">Income</p><p class="text-xs font-bold">65.0%</p></div>
+<div class="bg-white/80 backdrop-blur px-3 py-2 rounded-xl flex-1 text-center"><p class="text-[8px] text-on-surface-variant font-bold uppercase">Expense</p><p class="text-xs font-bold">28.5%</p></div>
+<div class="bg-white/80 backdrop-blur px-3 py-2 rounded-xl flex-1 text-center"><p class="text-[8px] text-on-surface-variant font-bold uppercase">Savings</p><p class="text-xs font-bold">6.5%</p></div>
+</div>
+</div>
+<!-- Intelligence Briefing -->
+<div class="bg-tertiary-container/10 border border-tertiary-container/30 rounded-3xl p-8">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-tertiary">bolt</span>
+<h3 class="text-lg font-bold text-tertiary">Ledger Intelligence</h3>
+</div>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="w-1 h-auto bg-tertiary rounded-full"></div>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+<strong class="text-on-surface">Saving Opportunity:</strong> Your Goldman Sachs interest rate was adjusted to 4.50% APY today.
+                                </p>
+</div>
+<div class="flex gap-4">
+<div class="w-1 h-auto bg-primary-dim rounded-full"></div>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+<strong class="text-on-surface">Subscription Alert:</strong> We detected a $42.00 increase in your recurring monthly cloud storage fees.
+                                </p>
+</div>
+<button class="w-full py-3 rounded-xl border border-tertiary-container text-tertiary text-xs font-bold uppercase tracking-wider hover:bg-tertiary-container/20 transition-colors">
+                                View Full Briefing
+                            </button>
+</div>
+</div>
+<!-- Security Badge -->
+<div class="bg-secondary-container/20 rounded-2xl p-6 flex items-center gap-4">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-secondary shadow-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-secondary-container uppercase leading-none mb-1">Encrypted Access</p>
+<p class="text-[10px] text-secondary font-medium">Last synced: 2 minutes ago</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

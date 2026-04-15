@@ -1,13 +1,5 @@
 'use client';
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -53,7 +45,7 @@ export default function TransactionList({
 
   if (transactions.length === 0) {
     return (
-      <Card>
+      <Card className="border-0 bg-card/90 shadow-[0_20px_50px_-40px_rgba(58,47,52,0.55)]">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
@@ -68,60 +60,50 @@ export default function TransactionList({
   }
 
   return (
-    <Card>
+    <Card className="border-0 bg-card/90 shadow-[0_20px_50px_-40px_rgba(58,47,52,0.55)]">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="tracking-tight">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Date</TableHead>
-              <TableHead>Merchant</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {transactions.map((transaction) => (
-              <TableRow key={transaction.transaction_id}>
-                <TableCell className="font-medium">
-                  {formatDate(transaction.date)}
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-col">
-                    <span className="font-medium">
-                      {transaction.merchant_name || transaction.name}
-                    </span>
-                    {transaction.pending && (
-                      <Badge variant="outline" className="w-fit mt-1 text-xs">
-                        Pending
-                      </Badge>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  {transaction.category[0] && (
-                    <Badge variant="secondary" className="text-xs">
-                      {transaction.category[0]}
-                    </Badge>
-                  )}
-                </TableCell>
-                <TableCell
-                  className={`text-right font-semibold ${
-                    isPositive(transaction.amount)
-                      ? 'text-green-600'
-                      : 'text-red-600'
-                  }`}
-                >
-                  {isPositive(transaction.amount) ? '+' : '-'}
-                  {formatCurrency(transaction.amount)}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <CardContent className="space-y-3">
+        {transactions.map((transaction) => (
+          <div
+            key={transaction.transaction_id}
+            className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-card px-4 py-3 md:flex-row md:items-center md:justify-between"
+          >
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <p className="truncate font-medium">
+                  {transaction.merchant_name || transaction.name}
+                </p>
+                {transaction.pending && (
+                  <Badge variant="secondary" className="rounded-full text-xs">
+                    Pending
+                  </Badge>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {formatDate(transaction.date)}
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between gap-3 md:justify-end">
+              {transaction.category[0] && (
+                <Badge variant="secondary" className="rounded-full text-xs">
+                  {transaction.category[0]}
+                </Badge>
+              )}
+              <p
+                className={`text-right font-semibold ${
+                  isPositive(transaction.amount) ? 'text-green-600' : 'text-red-600'
+                }`}
+              >
+                {isPositive(transaction.amount) ? '+' : '-'}
+                {formatCurrency(transaction.amount)}
+              </p>
+            </div>
+          </div>
+        ))}
       </CardContent>
     </Card>
   );

@@ -2,7 +2,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 
 interface AccountCardProps {
   account: {
@@ -31,71 +30,53 @@ export default function AccountCard({ account, onClick }: AccountCardProps) {
 
   const getAccountTypeColor = (type: string) => {
     const colors: Record<string, string> = {
-      depository: 'bg-blue-500',
-      credit: 'bg-purple-500',
-      loan: 'bg-orange-500',
-      investment: 'bg-green-500',
+      depository: 'bg-[#705866]',
+      credit: 'bg-[#814f70]',
+      loan: 'bg-[#a8364b]',
+      investment: 'bg-[#6c567f]',
     };
-    return colors[type] || 'bg-gray-500';
+    return colors[type] || 'bg-muted-foreground';
   };
 
   return (
     <Card
-      className="cursor-pointer hover:shadow-lg transition-shadow"
+      className="cursor-pointer border border-border/60 bg-card/90 py-0 shadow-none transition-colors hover:bg-secondary/25"
       onClick={onClick}
     >
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{account.name}</CardTitle>
-          <Badge variant="outline" className="capitalize">
-            {account.subtype}
+      <CardHeader className="gap-1 px-4 pt-4 pb-2">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className={`h-2.5 w-2.5 shrink-0 rounded-full ${getAccountTypeColor(account.type)}`} />
+            <CardTitle className="truncate text-base tracking-tight">{account.name}</CardTitle>
+          </div>
+          <Badge variant="secondary" className="shrink-0 capitalize">
+            {account.type}
           </Badge>
         </div>
-        {account.mask && (
-          <CardDescription>••••{account.mask}</CardDescription>
-        )}
+        <CardDescription>
+          {account.subtype}{account.mask ? ` •••• ${account.mask}` : ''}
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
+      <CardContent className="px-4 pb-4">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <div>
-            <p className="text-sm text-muted-foreground">Current Balance</p>
-            <p className="text-2xl font-bold">
-              {formatCurrency(account.balance.current)}
-            </p>
+            <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Current</p>
+            <p className="text-lg font-semibold tracking-tight">{formatCurrency(account.balance.current)}</p>
           </div>
 
           {account.balance.available !== null && (
-            <>
-              <Separator />
-              <div>
-                <p className="text-sm text-muted-foreground">Available</p>
-                <p className="text-lg font-semibold">
-                  {formatCurrency(account.balance.available)}
-                </p>
-              </div>
-            </>
+            <div>
+              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Available</p>
+              <p className="text-lg font-semibold">{formatCurrency(account.balance.available)}</p>
+            </div>
           )}
 
           {account.balance.limit !== null && (
-            <>
-              <Separator />
-              <div>
-                <p className="text-sm text-muted-foreground">Credit Limit</p>
-                <p className="text-lg font-semibold">
-                  {formatCurrency(account.balance.limit)}
-                </p>
-              </div>
-            </>
+            <div>
+              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Credit Limit</p>
+              <p className="text-lg font-semibold">{formatCurrency(account.balance.limit)}</p>
+            </div>
           )}
-
-          <div className="flex items-center gap-2 pt-2">
-            <div
-              className={`w-2 h-2 rounded-full ${getAccountTypeColor(account.type)}`}
-            />
-            <span className="text-xs text-muted-foreground capitalize">
-              {account.type}
-            </span>
-          </div>
         </div>
       </CardContent>
     </Card>
