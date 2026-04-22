@@ -25,9 +25,20 @@ type BankAccount = {
   };
 };
 
+type Transaction = {
+  transaction_id: string;
+  account_id: string;
+  amount: number;
+  date: string;
+  name: string;
+  merchant_name?: string;
+  category: string[];
+  pending: boolean;
+};
+
 export default function Dashboard() {
   const [accounts, setAccounts] = useState<BankAccount[]>([]);
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
 
@@ -52,7 +63,7 @@ export default function Dashboard() {
     fetchData();
   }, []);
 
-  const handleLinkSuccess = (data: any) => {
+  const handleLinkSuccess = (data: unknown) => {
     console.log('Account linked successfully:', data);
     // Refresh data after linking
     fetchData();
@@ -95,11 +106,11 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-transparent">
-      <header className="sticky top-0 z-30 border-b border-border/60 bg-background/75 px-4 py-3 backdrop-blur-md lg:ml-64 lg:px-8">
+      <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 px-4 py-3 backdrop-blur-xl lg:ml-64 lg:px-8">
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-sm text-muted-foreground">Dashboard</p>
-            <h1 className="text-xl font-semibold tracking-tight">Accounts Intelligence</h1>
+            <h1 className="text-xl font-semibold tracking-tight">Account Dashboard</h1>
           </div>
           <div className="flex items-center gap-3">
             <Input className="hidden w-64 rounded-full bg-card/80 md:block" placeholder="Search wealth..." />
@@ -110,15 +121,31 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="px-4 py-6 lg:ml-64 lg:px-8 lg:py-8">
+      <main className="px-4 py-6 pb-28 lg:ml-64 lg:px-8 lg:py-8 lg:pb-8">
         {accounts.length > 0 && (
-          <Card className="mb-8 overflow-hidden border-0 bg-linear-to-br from-primary to-[#6c567f] text-primary-foreground shadow-[0_24px_80px_-50px_rgba(58,47,52,0.7)]">
-            <CardContent className="p-6 md:p-8">
-              <p className="text-xs uppercase tracking-[0.18em] opacity-80">Total Net Liquidity</p>
-              <p className="mt-3 text-4xl font-semibold tracking-tight md:text-5xl">{formatCurrency(totalBalance)}</p>
-              <p className="mt-2 text-sm opacity-85">Across {accounts.length} connected accounts</p>
-            </CardContent>
-          </Card>
+          <section className="mb-8 grid gap-4 lg:grid-cols-[minmax(0,1fr),auto]">
+            <Card className="overflow-hidden border-0 bg-linear-to-br from-primary to-chart-3 text-primary-foreground shadow-[0_24px_80px_-50px_rgba(58,47,52,0.7)]">
+              <CardContent className="p-6 md:p-8">
+                <p className="text-xs uppercase tracking-[0.18em] opacity-80">Total Net Liquidity</p>
+                <p className="mt-3 text-4xl font-semibold tracking-tight md:text-5xl">{formatCurrency(totalBalance)}</p>
+                <p className="mt-2 text-sm opacity-85">Across {accounts.length} connected accounts</p>
+              </CardContent>
+            </Card>
+            <div className="grid grid-cols-2 gap-3 lg:w-[22rem]">
+              <Card className="border-0 bg-secondary/20">
+                <CardContent className="space-y-1 p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Monthly Yield</p>
+                  <p className="text-xl font-semibold tracking-tight text-foreground">+4.2%</p>
+                </CardContent>
+              </Card>
+              <Card className="border-0 bg-accent/35">
+                <CardContent className="space-y-1 p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Active Banks</p>
+                  <p className="text-xl font-semibold tracking-tight text-foreground">{accounts.length.toString().padStart(2, '0')}</p>
+                </CardContent>
+              </Card>
+            </div>
+          </section>
         )}
 
         {loading ? (
@@ -157,7 +184,7 @@ export default function Dashboard() {
                         <CardTitle className="text-base font-semibold uppercase tracking-[0.15em] text-muted-foreground">
                           {groupName}
                         </CardTitle>
-                        <Badge variant="secondary" className="rounded-full">
+                        <Badge variant="secondary" className="rounded-full text-xs uppercase tracking-[0.12em]">
                           {formatCurrency(groupTotal)}
                         </Badge>
                       </div>

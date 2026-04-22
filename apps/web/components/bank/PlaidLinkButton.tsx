@@ -1,13 +1,20 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import type { AxiosError } from 'axios';
 import { usePlaidLink } from 'react-plaid-link';
 import { Button } from '@/components/ui/button';
 import { plaidApi } from '@/lib/api-client';
 
+type PlaidLinkSuccessData = Awaited<ReturnType<typeof plaidApi.exchangePublicToken>>;
+
+interface PlaidErrorResponse {
+  error?: string;
+}
+
 interface PlaidLinkButtonProps {
-  onSuccess?: (data: any) => void;
-  onError?: (error: any) => void;
+  onSuccess?: (data: PlaidLinkSuccessData) => void;
+  onError?: (error: unknown) => void;
   userId?: string;
   buttonText?: string;
   variant?: 'default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'destructive';
@@ -27,64 +34,49 @@ export default function PlaidLinkButton({
   useEffect(() => {
     const fetchLinkToken = async () => {
       try {
-        console.log('Fetching link token...');
         const data = await plaidApi.createLinkToken(userId);
         if (data.link_token) {
-          console.log('Link token received:', data.link_token);
           setLinkToken(data.link_token);
         } else {
           console.error('No link token in response:', data);
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Error fetching link token:', error);
-        console.error('Error details:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status
-        });
         onError?.(error);
       }
     };
-    
+
     fetchLinkToken();
-  }, [userId]);
+  }, [onError, userId]);
 
   // Handle successful Plaid Link flow
-  const handlePlaidSuccess = useCallback(async (public_token: string, metadata: any) => {
-    setLoading(true);
-    try {
-      console.log('Plaid Link success! Public token received:', public_token);
-      console.log('Metadata:', metadata);
-      console.log('Exchanging public token for access token...');
-      
-      const exchangeData = await plaidApi.exchangePublicToken(public_token, userId);
-      
-      console.log('Successfully linked account:', exchangeData);
-      onSuccess?.(exchangeData);
-    } catch (error: any) {
-      console.error('Error exchanging token:', error);
-      console.error('Error details:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
-      });
-      alert(`Error: ${error.response?.data?.error || error.message}`);
-      onError?.(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [userId, onSuccess, onError]);
+  const handlePlaidSuccess = useCallback(
+    async (publicToken: string) => {
+      setLoading(true);
+      try {
+        const exchangeData = await plaidApi.exchangePublicToken(publicToken, userId);
+        onSuccess?.(exchangeData);
+      } catch (error: unknown) {
+        console.error('Error exchanging token:', error);
+        const axiosError = error as AxiosError<PlaidErrorResponse>;
+        const message = axiosError.response?.data?.error ?? axiosError.message;
+        alert(`Error: ${message}`);
+        onError?.(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [onError, onSuccess, userId]
+  );
 
   // Initialize Plaid Link
   const config = {
     token: linkToken,
     onSuccess: handlePlaidSuccess,
-    onExit: (error: any, metadata: any) => {
+    onExit: (error: unknown) => {
       if (error) {
         console.error('Plaid Link exited with error:', error);
         onError?.(error);
-      } else {
-        console.log('User exited Plaid Link');
       }
     },
   };
@@ -93,10 +85,7 @@ export default function PlaidLinkButton({
 
   const handleClick = () => {
     if (ready) {
-      console.log('Opening Plaid Link modal...');
       open();
-    } else {
-      console.log('Plaid Link not ready yet...');
     }
   };
 

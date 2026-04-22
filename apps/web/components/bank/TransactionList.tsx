@@ -69,7 +69,7 @@ export default function TransactionList({
         {transactions.map((transaction) => (
           <div
             key={transaction.transaction_id}
-            className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-card px-4 py-3 md:flex-row md:items-center md:justify-between"
+            className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-card px-4 py-3 transition-colors hover:bg-muted/50 md:flex-row md:items-center md:justify-between"
           >
             <div className="min-w-0">
               <div className="flex items-center gap-2">
@@ -95,7 +95,7 @@ export default function TransactionList({
               )}
               <p
                 className={`text-right font-semibold ${
-                  isPositive(transaction.amount) ? 'text-green-600' : 'text-red-600'
+                  isPositive(transaction.amount) ? 'text-primary' : 'text-destructive'
                 }`}
               >
                 {isPositive(transaction.amount) ? '+' : '-'}

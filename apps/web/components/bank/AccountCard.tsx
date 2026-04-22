@@ -40,7 +40,7 @@ export default function AccountCard({ account, onClick }: AccountCardProps) {
 
   return (
     <Card
-      className="cursor-pointer border border-border/60 bg-card/90 py-0 shadow-none transition-colors hover:bg-secondary/25"
+      className="cursor-pointer border border-border/60 bg-card/95 py-0 shadow-none transition-all hover:-translate-y-0.5 hover:border-primary/35 hover:bg-card"
       onClick={onClick}
     >
       <CardHeader className="gap-1 px-4 pt-4 pb-2">
@@ -49,11 +49,11 @@ export default function AccountCard({ account, onClick }: AccountCardProps) {
             <div className={`h-2.5 w-2.5 shrink-0 rounded-full ${getAccountTypeColor(account.type)}`} />
             <CardTitle className="truncate text-base tracking-tight">{account.name}</CardTitle>
           </div>
-          <Badge variant="secondary" className="shrink-0 capitalize">
+          <Badge variant="secondary" className="shrink-0 rounded-full capitalize">
             {account.type}
           </Badge>
         </div>
-        <CardDescription>
+        <CardDescription className="text-xs uppercase tracking-[0.12em]">
           {account.subtype}{account.mask ? ` •••• ${account.mask}` : ''}
         </CardDescription>
       </CardHeader>

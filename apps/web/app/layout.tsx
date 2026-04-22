@@ -20,9 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${manrope.variable} antialiased`}>
+      <body className={`${manrope.variable} antialiased selection:bg-primary/20`}>
         <SideNavbar />
-        {children}
+        <div className="relative min-h-screen pb-24 lg:pb-0">{children}</div>
       </body>
     </html>
   );

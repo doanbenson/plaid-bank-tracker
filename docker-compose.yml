@@ -1,17 +1,4 @@
 services:
-  mongo:
-    image: mongo:7
-    container_name: plaid-mongo
-    restart: unless-stopped
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-password}
-      MONGO_INITDB_DATABASE: plaid_bank
-    volumes:
-      - mongo_data:/data/db
-
   api:
     build:
       context: ./apps/api
@@ -22,10 +9,4 @@ services:
       - "5000:5000"
     env_file:
       - ./apps/api/.env
-    environment:
-      MONGO_URI: mongodb://${MONGO_USER:-admin}:${MONGO_PASSWORD:-password}@mongo:27017/plaid_bank?authSource=admin
-    depends_on:
-      - mongo
 
-volumes:
-  mongo_data:

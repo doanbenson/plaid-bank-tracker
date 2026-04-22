@@ -52,10 +52,10 @@ export const accountsApi = {
 // Transactions API
 export const transactionsApi = {
   getAll: async (userId?: string, accountId?: string) => {
-    const params: any = {};
+    const params: Record<string, string> = {};
     if (userId) params.user_id = userId;
     if (accountId) params.account_id = accountId;
-    
+
     const response = await apiClient.get('/api/transactions', { params });
     return response.data;
   },

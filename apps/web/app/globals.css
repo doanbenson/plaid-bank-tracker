@@ -56,49 +56,49 @@
   --popover-foreground: #3a2f34;
   --primary: #814f70;
   --primary-foreground: #fff7f8;
-  --secondary: #fadaeb;
-  --secondary-foreground: #624b59;
+  --secondary: #705866;
+  --secondary-foreground: #fff7f8;
   --muted: #fff0f4;
   --muted-foreground: #695b61;
-  --accent: #fcbce3;
-  --accent-foreground: #653656;
+  --accent: #e8cdfd;
+  --accent-foreground: #574269;
   --destructive: #a8364b;
-  --border: #f0dee4;
+  --border: #beaeb4;
   --input: #faeaef;
   --ring: #85777d;
   --chart-1: #814f70;
-  --chart-2: #705866;
+  --chart-2: #8a707f;
   --chart-3: #6c567f;
-  --chart-4: #fcbce3;
+  --chart-4: #fadaeb;
   --chart-5: #e8cdfd;
-  --sidebar: #fff0f4;
+  --sidebar: #faeaef;
   --sidebar-foreground: #3a2f34;
   --sidebar-primary: #814f70;
   --sidebar-primary-foreground: #fff7f8;
-  --sidebar-accent: #fcbce3;
-  --sidebar-accent-foreground: #653656;
-  --sidebar-border: #f0dee4;
+  --sidebar-accent: #fadaeb;
+  --sidebar-accent-foreground: #624b59;
+  --sidebar-border: #beaeb4;
   --sidebar-ring: #85777d;
 }
 
 .dark {
   --background: #120d0f;
-  --foreground: #f5ebef;
+  --foreground: #f4e9ee;
   --card: #1a1316;
-  --card-foreground: #f5ebef;
+  --card-foreground: #f4e9ee;
   --popover: #1a1316;
-  --popover-foreground: #f5ebef;
+  --popover-foreground: #f4e9ee;
   --primary: #fcbce3;
   --primary-foreground: #4f2342;
   --secondary: #6d5563;
   --secondary-foreground: #fff7f8;
-  --muted: #2a1f24;
+  --muted: #2b2025;
   --muted-foreground: #cbbbc2;
-  --accent: #614c73;
+  --accent: #433055;
   --accent-foreground: #fef7ff;
   --destructive: #f97386;
-  --border: #403038;
-  --input: #2d2228;
+  --border: #55424b;
+  --input: #32262d;
   --ring: #beaeb4;
   --chart-1: #fcbce3;
   --chart-2: #fadaeb;
@@ -106,12 +106,12 @@
   --chart-4: #814f70;
   --chart-5: #6c567f;
   --sidebar: #1a1316;
-  --sidebar-foreground: #f5ebef;
+  --sidebar-foreground: #f4e9ee;
   --sidebar-primary: #fcbce3;
   --sidebar-primary-foreground: #4f2342;
   --sidebar-accent: #614c73;
   --sidebar-accent-foreground: #fef7ff;
-  --sidebar-border: #403038;
+  --sidebar-border: #55424b;
   --sidebar-ring: #beaeb4;
 }
 
@@ -121,8 +121,8 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-image: radial-gradient(circle at 12% 8%, #ffe9f4 0%, transparent 34%),
-      radial-gradient(circle at 88% 0%, #f1e2ff 0%, transparent 28%),
-      linear-gradient(180deg, #fff8f8 0%, #fff2f6 42%, #fff8f8 100%);
+    background-image: radial-gradient(circle at 12% 8%, #fde8f2 0%, transparent 34%),
+      radial-gradient(circle at 88% 0%, #efdeff 0%, transparent 28%),
+      linear-gradient(180deg, #fff8f8 0%, #fff3f6 42%, #fff8f8 100%);
   }
 }
