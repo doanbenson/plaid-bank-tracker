@@ -1,0 +1,15 @@
+{
+  "name": "serverless-backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "cutover:validate-config": "powershell -ExecutionPolicy Bypass -File .\\scripts\\validate-cutover-config.ps1 -ConfigPath .\\ops\\cutover-config.template.json -AllowPlaceholders",
+    "cutover:validate-rollback": "powershell -ExecutionPolicy Bypass -File .\\scripts\\validate-cutover-rollback.ps1 -ConfigPath .\\ops\\cutover-config.template.json -AllowPlaceholders",
+    "cutover:checklist-status": "powershell -ExecutionPolicy Bypass -File .\\scripts\\get-cutover-checklist-status.ps1 -ChecklistPath .\\ops\\cutover-checklist.md",
+    "cutover:preflight": "powershell -ExecutionPolicy Bypass -File .\\scripts\\invoke-cutover-preflight.ps1 -ConfigPath .\\ops\\cutover-config.template.json -AllowPlaceholders"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

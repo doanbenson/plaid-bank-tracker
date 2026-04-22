@@ -14,12 +14,16 @@ plaid-bank-app/
 │   │   │   └── bank/      # Custom bank components
 │   │   └── lib/           # Utilities and API client
 │   │
-│   └── api/                # Flask backend
+│   ├── api/                # Flask backend (legacy during migration)
 │       ├── app/
 │       │   ├── handlers/  # Business logic
 │       │   ├── routes/    # API endpoints
 │       │   └── models/    # Data models
 │       └── requirements.txt
+│   │
+│   └── serverless-backend/ # AWS Lambda/Step Functions migration scaffold
+│       ├── src/           # Contracts, Lambdas, key helpers
+│       └── state-machines/ # Step Functions ASL definitions
 │
 └── package.json           # Root workspace config
 ```

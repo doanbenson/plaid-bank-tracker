@@ -1,0 +1,167 @@
+{
+  "Comment": "Split transfer orchestration with per-leg retries and compensation.",
+  "StartAt": "ValidateWebhookAndAcquireInboundIdempotency",
+  "States": {
+    "ValidateWebhookAndAcquireInboundIdempotency": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${ValidateWebhookLambdaArn}",
+        "Payload.$": "$"
+      },
+      "ResultPath": "$.validation",
+      "Next": "LoadUserRules"
+    },
+    "LoadUserRules": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${LoadRulesLambdaArn}",
+        "Payload.$": "$"
+      },
+      "ResultPath": "$.rules",
+      "Next": "ComputeLegPlan"
+    },
+    "ComputeLegPlan": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${ComputeLegPlanLambdaArn}",
+        "Payload.$": "$"
+      },
+      "ResultPath": "$.plan",
+      "Next": "PersistExecutionAndLegs"
+    },
+    "PersistExecutionAndLegs": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${PersistExecutionLambdaArn}",
+        "Payload.$": "$"
+      },
+      "ResultPath": "$.persisted",
+      "Next": "ProcessLegs"
+    },
+    "ProcessLegs": {
+      "Type": "Map",
+      "ItemsPath": "$.plan.Payload.legs",
+      "MaxConcurrency": 4,
+      "ResultPath": "$.legResults",
+      "ItemProcessor": {
+        "StartAt": "ProcessLeg",
+        "States": {
+          "ProcessLeg": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "Parameters": {
+              "FunctionName": "${ProcessTransferLegLambdaArn}",
+              "Payload": {
+                "executionId.$": "$$.Execution.Input.plan.Payload.executionId",
+                "sourceAccountId.$": "$$.Execution.Input.plan.Payload.sourceAccountId",
+                "currency.$": "$$.Execution.Input.plan.Payload.currency",
+                "leg.$": "$"
+              }
+            },
+            "ResultPath": "$.result",
+            "Retry": [
+              {
+                "ErrorEquals": [
+                  "TransferTransientError",
+                  "States.Timeout",
+                  "Lambda.ServiceException",
+                  "Lambda.AWSLambdaException",
+                  "Lambda.SdkClientException"
+                ],
+                "IntervalSeconds": 2,
+                "BackoffRate": 2.0,
+                "MaxAttempts": 4
+              }
+            ],
+            "End": true
+          }
+        }
+      },
+      "Next": "EvaluateAggregateOutcome"
+    },
+    "EvaluateAggregateOutcome": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${EvaluateOutcomeLambdaArn}",
+        "Payload.$": "$"
+      },
+      "ResultPath": "$.aggregate",
+      "Next": "AggregateChoice"
+    },
+    "AggregateChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.aggregate.Payload.status",
+          "StringEquals": "SUCCEEDED",
+          "Next": "MarkExecutionSucceeded"
+        }
+      ],
+      "Default": "CompensateSucceededLegs"
+    },
+    "CompensateSucceededLegs": {
+      "Type": "Map",
+      "ItemsPath": "$.aggregate.Payload.legsToCompensate",
+      "ResultPath": "$.compensationResults",
+      "ItemProcessor": {
+        "StartAt": "CompensateLeg",
+        "States": {
+          "CompensateLeg": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "Parameters": {
+              "FunctionName": "${CompensateTransferLegLambdaArn}",
+              "Payload.$": "$"
+            },
+            "ResultPath": "$.result",
+            "Retry": [
+              {
+                "ErrorEquals": [
+                  "CompensationTransientError",
+                  "States.Timeout",
+                  "Lambda.ServiceException",
+                  "Lambda.AWSLambdaException",
+                  "Lambda.SdkClientException"
+                ],
+                "IntervalSeconds": 2,
+                "BackoffRate": 2.0,
+                "MaxAttempts": 3
+              }
+            ],
+            "End": true
+          }
+        }
+      },
+      "Next": "FinalizeFailedExecutionAndNotify"
+    },
+    "MarkExecutionSucceeded": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${FinalizeExecutionLambdaArn}",
+        "Payload": {
+          "status": "SUCCEEDED",
+          "context.$": "$"
+        }
+      },
+      "End": true
+    },
+    "FinalizeFailedExecutionAndNotify": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${FinalizeExecutionLambdaArn}",
+        "Payload": {
+          "status": "FAILED_COMPENSATED",
+          "context.$": "$"
+        }
+      },
+      "End": true
+    }
+  }
+}
