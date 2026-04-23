@@ -10,6 +10,10 @@
     "dev:all": "npm run dev & npm run dev:api",
     "build": "npm run build --workspace=web",
     "start": "npm run start --workspace=web",
-    "lint": "npm run lint --workspace=web"
+    "lint": "npm run lint --workspace=web",
+    "deploy:local": "cdklocal deploy" 
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0"
   }
 }

@@ -131,7 +131,7 @@ export default function Dashboard() {
                 <p className="mt-2 text-sm opacity-85">Across {accounts.length} connected accounts</p>
               </CardContent>
             </Card>
-            <div className="grid grid-cols-2 gap-3 lg:w-[22rem]">
+            <div className="grid grid-cols-2 gap-3 lg:w-88">
               <Card className="border-0 bg-secondary/20">
                 <CardContent className="space-y-1 p-4">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Monthly Yield</p>
