@@ -1,0 +1,44 @@
+# name: Deploy Serverless Backend
+
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       # Only run this workflow if files in the backend folder change
+#       - 'apps/serverless-backend/**' 
+
+# jobs:
+#   deploy-dev:
+#     runs-on: ubuntu-latest
+    
+#     # Set the working directory for all run steps in this job
+#     defaults:
+#       run:
+#         working-directory: apps/serverless-backend
+
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v4
+
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '20' # Use your project's Node version
+
+#       - name: Install Dependencies
+#         run: npm ci
+
+#       # In production, use OIDC (aws-actions/configure-aws-credentials) 
+#       # instead of hardcoding secrets, but this is the standard starting point.
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v4
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-east-1
+
+#       - name: Deploy CDK Stack
+#         # Notice we use 'npx cdk deploy' here, NOT 'cdklocal', 
+#         # because GitHub Actions is deploying to the REAL AWS cloud.
+#         run: npx cdk deploy --require-approval never

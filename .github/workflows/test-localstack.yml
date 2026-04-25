@@ -1,0 +1,46 @@
+name: Integration Tests (LocalStack)
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-infrastructure:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: apps/serverless-backend
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 1. Start LocalStack using your existing docker-compose file
+      # We run this from the root directory (../..)
+      - name: Start LocalStack
+        working-directory: .
+        run: |
+          docker-compose up -d localstack
+          echo "Waiting for LocalStack to be ready..."
+          sleep 10 # Give the container a few seconds to boot up
+
+      - name: Install Dependencies
+        run: npm ci
+
+      # 2. Deploy to LocalStack
+      # Notice we use 'cdklocal' and we do NOT need AWS credentials!
+      - name: Bootstrap and Deploy to LocalStack
+        run: |
+          npx cdklocal bootstrap
+          npx cdklocal deploy --require-approval never
+
+      # 3. Run your tests against the running LocalStack environment
+      - name: Run Integration Tests
+        run: npm run test:integration
