@@ -361,7 +361,7 @@ export default function Dashboard() {
                   {/* Mini bar chart visualisation */}
                   <div className="absolute inset-x-8 bottom-16 top-20 flex items-end gap-1">
                     {Array.from({ length: 12 }).map((_, i) => {
-                      const h = 30 + Math.abs(Math.sin(i * 0.9)) * 60;
+                      const h = Math.round(30 + Math.abs(Math.sin(i * 0.9)) * 60);
                       return (
                         <div
                           key={i}
