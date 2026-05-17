@@ -20,6 +20,8 @@ export interface BankingApiHandlers {
   readonly plaidExchangeToken: lambda.NodejsFunction;
   readonly plaidSync: lambda.NodejsFunction;
   readonly transfersPost: lambda.NodejsFunction;
+  readonly transfersGet: lambda.NodejsFunction;
+  readonly sandboxTransferSimulate: lambda.NodejsFunction;
 }
 
 export class BankingWebhooks extends Construct {
@@ -126,8 +128,10 @@ export class BankingWebhooks extends Construct {
     const plaidCreateLinkToken = createApiLambda('ApiPlaidCreateLinkToken', 'api-plaid-create-link-token.ts', true);
     const plaidSandboxCreate   = createApiLambda('ApiPlaidSandboxCreate',   'api-plaid-sandbox-create.ts',   true);
     const plaidExchangeToken   = createApiLambda('ApiPlaidExchangeToken',   'api-plaid-exchange-token.ts',   true);
-    const plaidSyncFn          = createApiLambda('ApiPlaidSync',            'api-plaid-sync.ts');
+    const plaidSyncFn          = createApiLambda('ApiPlaidSync',            'api-plaid-sync.ts',             true);
     const transfersPostFn      = createApiLambda('ApiTransfersPost',        'api-transfers-post.ts');
+    const transfersGetFn       = createApiLambda('ApiTransfersGet',         'api-transfers-get.ts');
+    const sandboxTransferSimulateFn = createApiLambda('ApiSandboxTransferSimulate', 'api-sandbox-transfer-simulate.ts', true);
 
     // Grant Step Functions start-execution permission to the transfers lambda
     props.stateMachine.grantStartExecution(transfersPostFn);
@@ -140,6 +144,8 @@ export class BankingWebhooks extends Construct {
       plaidExchangeToken,
       plaidSync: plaidSyncFn,
       transfersPost: transfersPostFn,
+      transfersGet: transfersGetFn,
+      sandboxTransferSimulate: sandboxTransferSimulateFn,
     };
 
     plaidLambda.addEnvironment('PLAID_SYNC_LAMBDA_NAME', plaidSyncFn.functionName);

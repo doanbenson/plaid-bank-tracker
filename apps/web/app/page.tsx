@@ -2,10 +2,11 @@
 
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { accountsApi, transactionsApi } from '@/lib/api-client';
+import { transferApi } from '@/lib/api/services/transfer.service';
 import PlaidLinkButton from '@/components/bank/PlaidLinkButton';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import type { Account, Transaction } from '@/lib/api/types/domain';
+import type { Account, Transaction, Transfer } from '@/lib/api/types/domain';
 import { formatCurrency } from '@/lib/formatters';
 
 type GroupedAccounts = Record<string, Account[]>;
@@ -29,22 +30,67 @@ function AccountInitialAvatar({ name, type }: { name: string; type: string }) {
   );
 }
 
+function TransferBadge({ transfer, direction }: { transfer: Transfer; direction: 'outgoing' | 'incoming' }) {
+  const amount = formatCurrency(transfer.amountMinor / 100);
+  const date = transfer.createdAt
+    ? new Date(transfer.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    : '';
+
+  const isOutgoing = direction === 'outgoing';
+  const bg = isOutgoing ? 'bg-red-100' : 'bg-emerald-100';
+  const text = isOutgoing ? 'text-red-700' : 'text-emerald-700';
+  const icon = isOutgoing ? 'arrow_upward' : 'arrow_downward';
+  const label = isOutgoing ? 'Sending' : 'Receiving';
+
+  return (
+    <div className="tooltip-container">
+      <span className={`text-[9px] ${bg} ${text} px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter cursor-help inline-flex items-center gap-0.5`}>
+        <span className="material-symbols-outlined" style={{ fontSize: '10px', fontVariationSettings: "'FILL' 1" }}>{icon}</span>
+        {date ? `${label} · ${date}` : label}
+      </span>
+      <span className="tooltip-content font-bold">
+        {isOutgoing ? '-' : '+'}{amount} transfer {transfer.status.toLowerCase().replace('_', ' ')}
+      </span>
+    </div>
+  );
+}
+
 function AccountRow({
   account,
   onTransfer,
+  transfers,
 }: {
   account: Account;
   onTransfer: (account: Account) => void;
+  transfers: Transfer[];
 }) {
-  const balance = account.balance.current;
+  const balance = account.balance.available ?? account.balance.current;
   const isNeg = (balance ?? 0) < 0;
+
+  // Find active transfers for this account (outgoing = source, incoming = destination)
+  const outgoingTransfers = transfers.filter(
+    t => t.sourceAccountId === account.account_id &&
+         ['PENDING', 'IN_PROGRESS', 'INITIATED', 'SIMULATED'].includes(t.status)
+  );
+  const incomingTransfers = transfers.filter(
+    t => t.destinationAccountId === account.account_id &&
+         ['PENDING', 'IN_PROGRESS', 'INITIATED', 'SIMULATED'].includes(t.status)
+  );
 
   return (
     <div className="group bg-surface-container-lowest p-4 rounded-2xl flex items-center justify-between transition-all hover:scale-[1.01] hover:bg-white border border-transparent hover:border-secondary-container cursor-pointer">
       <div className="flex items-center gap-4">
         <AccountInitialAvatar name={account.name} type={account.type} />
         <div>
-          <h4 className="text-base font-bold text-on-surface">{account.name}</h4>
+          <div className="flex items-center gap-2">
+            <h4 className="text-base font-bold text-on-surface">{account.name}</h4>
+            {outgoingTransfers.length > 0 && (
+              <TransferBadge transfer={outgoingTransfers[0]} direction="outgoing" />
+            )}
+            {incomingTransfers.length > 0 && (
+              <TransferBadge transfer={incomingTransfers[0]} direction="incoming" />
+            )}
+          </div>
           <p className="text-xs text-on-surface-variant capitalize">
             {account.subtype}{account.mask ? ` •••• ${account.mask}` : ''}
           </p>
@@ -77,17 +123,19 @@ function AccountGroup({
   groupName,
   accounts,
   transactions,
+  transfers,
   defaultOpen,
   onTransfer,
 }: {
   groupName: string;
   accounts: Account[];
   transactions: Transaction[];
+  transfers: Transfer[];
   defaultOpen?: boolean;
   onTransfer: (account: Account) => void;
 }) {
   const meta = GROUP_META[groupName] || GROUP_META['Other'];
-  const groupTotal = accounts.reduce((s, a) => s + (a.balance.current ?? 0), 0);
+  const groupTotal = accounts.reduce((s, a) => s + (a.balance.available ?? a.balance.current ?? 0), 0);
   const isNeg = groupTotal < 0;
 
   // Count pending transactions for this group
@@ -115,6 +163,22 @@ function AccountGroup({
           </h4>
         </div>
         <div className="flex items-center gap-2">
+          {/* In-progress transfer count for this group */}
+          {(() => {
+            const groupTransferCount = transfers.filter(
+              t => accounts.some(a => a.account_id === t.sourceAccountId || a.account_id === t.destinationAccountId) &&
+                   ['PENDING', 'IN_PROGRESS', 'INITIATED', 'SIMULATED'].includes(t.status)
+            ).length;
+            return groupTransferCount > 0 ? (
+              <div className="tooltip-container">
+                <span className="text-[9px] bg-tertiary-container text-on-tertiary-container px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter cursor-help inline-flex items-center gap-0.5">
+                  <span className="material-symbols-outlined" style={{ fontSize: '10px', fontVariationSettings: "'FILL' 1" }}>schedule</span>
+                  {groupTransferCount} In Progress
+                </span>
+                <span className="tooltip-content font-bold">{groupTransferCount} transfer{groupTransferCount > 1 ? 's' : ''} in progress</span>
+              </div>
+            ) : null;
+          })()}
           {pendingCount > 0 && (
             <div className="tooltip-container">
               <span className="text-[9px] bg-tertiary-container text-on-tertiary-container px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter cursor-help">
@@ -133,28 +197,88 @@ function AccountGroup({
       </summary>
       <div className="space-y-3 mt-4 px-1">
         {accounts.map(acct => (
-          <AccountRow key={acct.account_id} account={acct} onTransfer={onTransfer} />
+          <AccountRow key={acct.account_id} account={acct} onTransfer={onTransfer} transfers={transfers} />
         ))}
       </div>
     </details>
   );
 }
 
+function ActiveTransfersCard({ transfers, accounts }: { transfers: Transfer[]; accounts: Account[] }) {
+  const activeTransfers = transfers.filter(
+    t => ['PENDING', 'IN_PROGRESS', 'INITIATED', 'SIMULATED'].includes(t.status)
+  );
+
+  if (activeTransfers.length === 0) return null;
+
+  return (
+    <div className="bg-tertiary-container/10 border border-tertiary-container/30 rounded-3xl p-6 relative overflow-hidden">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-xl bg-tertiary-container/40 flex items-center justify-center text-tertiary">
+          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>swap_horiz</span>
+        </div>
+        <div>
+          <h3 className="text-sm font-bold text-on-tertiary-container" style={{ fontFamily: 'Manrope, sans-serif' }}>
+            Active Transfers
+          </h3>
+          <p className="text-[10px] text-on-surface-variant">{activeTransfers.length} in progress</p>
+        </div>
+      </div>
+      <div className="space-y-3">
+        {activeTransfers.slice(0, 4).map(transfer => {
+          const fromAccount = accounts.find(a => a.account_id === transfer.sourceAccountId);
+          const toAccount = accounts.find(a => a.account_id === transfer.destinationAccountId);
+          const date = transfer.createdAt
+            ? new Date(transfer.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+            : '';
+
+          return (
+            <div key={transfer.executionId} className="flex items-center gap-3 p-3 rounded-xl bg-surface-container-lowest/80 border border-transparent hover:border-tertiary-container/40 transition-colors">
+              <div className="w-2 h-2 bg-tertiary rounded-full flex-shrink-0 animate-pulse" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1 text-xs font-bold text-on-surface truncate">
+                  <span className="truncate">{fromAccount?.name ?? 'Unknown'}</span>
+                  <span className="material-symbols-outlined text-on-surface-variant flex-shrink-0" style={{ fontSize: '12px' }}>arrow_forward</span>
+                  <span className="truncate">{toAccount?.name ?? 'Unknown'}</span>
+                </div>
+                <p className="text-[10px] text-on-surface-variant">
+                  {formatCurrency(transfer.amountMinor / 100)} · {date}
+                </p>
+              </div>
+              <span className="text-[9px] bg-tertiary-container text-on-tertiary-container px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter whitespace-nowrap">
+                {transfer.status.replace('_', ' ')}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      {activeTransfers.length > 4 && (
+        <p className="text-[10px] text-on-surface-variant mt-3 text-center font-medium">
+          +{activeTransfers.length - 4} more transfer{activeTransfers.length - 4 > 1 ? 's' : ''}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transfers, setTransfers] = useState<Transfer[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [accountsData, transactionsData] = await Promise.all([
+      const [accountsData, transactionsData, transfersData] = await Promise.all([
         accountsApi.getAll(),
         transactionsApi.getAll(),
+        transferApi.getAll().catch(() => [] as Transfer[]),
       ]);
       setAccounts(accountsData || []);
       setTransactions(transactionsData || []);
+      setTransfers(transfersData || []);
     } catch (err) {
       console.error('Error fetching data:', err);
     } finally {
@@ -172,7 +296,7 @@ export default function Dashboard() {
     router.push(`/transfer?fromAccount=${account.account_id}`);
   };
 
-  const totalBalance = accounts.reduce((s, a) => s + (a.balance.current ?? 0), 0);
+  const totalBalance = accounts.reduce((s, a) => s + (a.balance.available ?? a.balance.current ?? 0), 0);
   const activeCount = accounts.length;
 
   const groupedAccounts: GroupedAccounts = accounts.reduce<GroupedAccounts>((acc, a) => {
@@ -340,6 +464,7 @@ export default function Dashboard() {
                       groupName={groupName}
                       accounts={groupAccts}
                       transactions={transactions}
+                      transfers={transfers}
                       defaultOpen={i === 0}
                       onTransfer={handleTransfer}
                     />
@@ -418,6 +543,9 @@ export default function Dashboard() {
                     </button>
                   </div>
                 </div>
+
+                {/* Active Transfers */}
+                <ActiveTransfersCard transfers={transfers} accounts={accounts} />
 
                 {/* Quick transfer CTA */}
                 <div

@@ -2,6 +2,7 @@ export type ExecutionStatus =
   | "PENDING"
   | "IN_PROGRESS"
   | "SUCCEEDED"
+  | "SIMULATED"
   | "FAILED_NO_SIDE_EFFECTS"
   | "FAILED_COMPENSATED"
   | "FAILED_COMPENSATION_REQUIRED_MANUAL";
@@ -10,6 +11,7 @@ export type LegStatus =
   | "PENDING"
   | "IN_PROGRESS"
   | "SUCCEEDED"
+  | "SIMULATED"
   | "FAILED";
 
 export interface SplitRule {

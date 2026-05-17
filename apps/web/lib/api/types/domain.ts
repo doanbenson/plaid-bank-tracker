@@ -25,3 +25,16 @@ export type Transaction = {
   category: string[];
   pending: boolean;
 };
+
+export type TransferStatus = 'PENDING' | 'IN_PROGRESS' | 'SUCCEEDED' | 'FAILED' | 'SIMULATED' | 'INITIATED' | 'UNKNOWN';
+
+export type Transfer = {
+  executionId: string;
+  status: TransferStatus;
+  sourceAccountId: string;
+  destinationAccountId: string;
+  amountMinor: number;
+  currency: string;
+  createdAt: string;
+  updatedAt: string;
+};

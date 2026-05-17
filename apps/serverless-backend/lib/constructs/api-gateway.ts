@@ -11,6 +11,8 @@ export interface BankingApiGatewayProps {
   readonly plaidExchangeToken: lambda.IFunction;
   readonly plaidSync: lambda.IFunction;
   readonly transfersPost: lambda.IFunction;
+  readonly transfersGet: lambda.IFunction;
+  readonly sandboxTransferSimulate: lambda.IFunction;
 }
 
 export class BankingApiGateway extends Construct {
@@ -63,6 +65,14 @@ export class BankingApiGateway extends Construct {
 
     const transfers = api.addResource("transfers");
     transfers.addMethod("POST", new apigw.LambdaIntegration(props.transfersPost));
+    transfers.addMethod("GET", new apigw.LambdaIntegration(props.transfersGet));
+
+    // Sandbox-only endpoints
+    const sandbox = api.addResource("sandbox");
+    const sandboxTransfer = sandbox.addResource("transfer");
+    sandboxTransfer
+      .addResource("simulate")
+      .addMethod("POST", new apigw.LambdaIntegration(props.sandboxTransferSimulate));
 
 
     new cdk.CfnOutput(this, "ApiGatewayBaseUrl", {

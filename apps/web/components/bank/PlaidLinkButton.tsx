@@ -75,8 +75,8 @@ export default function PlaidLinkButton({
         alert(`Error: ${message}`);
         onError?.(error);
       } finally {
-        window.location.reload();
         setLoading(false);
+        window.location.reload();
       }
     },
     [onError, onSuccess, userId]
